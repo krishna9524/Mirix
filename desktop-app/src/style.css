@@ -1,0 +1,713 @@
+/* --- Global Reset & Main Layout --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  color: #f1f1f1; /* Dark theme text */
+  background-color: #1a1b1e; /* Dark theme main background */
+}
+
+#root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+}
+
+/* --- Sidebar (Chat History) --- */
+.sidebar {
+  width: 260px;
+  background-color: #202123;
+  color: white;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #303030;
+}
+
+.new-chat-button {
+  display: block;
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  background-color: #343541;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 5px;
+  text-align: left;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.new-chat-button:hover {
+  background-color: #4a4a52;
+}
+
+.chat-history-list {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.chat-session-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-session-item:hover,
+.chat-session-item.active {
+  background-color: #343541;
+}
+
+.session-title {
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 10px;
+}
+
+.session-actions button {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 2px;
+}
+.session-actions button:hover {
+  color: #fff;
+}
+
+/* --- Main Chat Content --- */
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #1a1b1e; /* Dark background */
+  position: relative;
+}
+
+.chat-window-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.chat-window-wrapper {
+  display: flex; /* Set by inline style in App.jsx */
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.chat-window {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+}
+
+.empty-chat {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #888;
+  padding: 20px;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background: #1a1b1e;
+}
+.empty-chat-logo {
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 15px;
+  border-radius: 50%;
+  background-color: #202123;
+  color: white;
+  margin-bottom: 20px;
+}
+
+/* --- Messages Area --- */
+.chat-messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  position: relative; 
+}
+
+.message {
+  padding: 12px 18px;
+  border-radius: 18px;
+  max-width: 80%;
+  line-height: 1.5;
+  position: relative;
+}
+
+/* User Message (Blue) */
+.message-wrapper.user {
+  align-items: flex-end;
+}
+.message.user {
+  background-color: #007bff;
+  color: white;
+  border-bottom-right-radius: 5px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* AI Message (Grey) */
+.message-wrapper.ai {
+  align-items: flex-start;
+}
+.message.ai {
+  background-color: #3a3b3e; /* Darker AI bubble */
+  color: #f1f1f1;
+  border-bottom-left-radius: 5px;
+}
+
+/* System Message (Stop) */
+.message-wrapper.system {
+  align-items: center;
+}
+.message.system {
+  background-color: transparent;
+  color: #888;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* File Message */
+.message.user.file-message {
+  background-color: #4a4a52;
+  color: #f1f1f1;
+  font-style: italic;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.file-link {
+  color: #58a6ff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.file-link:hover {
+  color: #80bfff;
+}
+
+/* Message Actions (Copy/Edit) */
+.message-actions {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s;
+  position: absolute;
+  bottom: 8px; /* Position inside the bubble */
+  left: -40px; /* Adjust as needed */
+}
+
+/* --- THIS IS THE FIX --- */
+/* Show actions when hovering the WHOLE WRAPPER */
+.message-wrapper:hover .message-actions {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Show actions on the RIGHT for AI messages */
+.message-wrapper.ai .message-actions {
+  left: auto; /* unset the left position */
+  right: -40px; /* Adjust as needed */
+}
+/* --- END OF FIX --- */
+
+.message-actions button {
+  background: #3a3b3e;
+  border: 1px solid #555;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  z-index: 10;
+  color: #f1f1f1;
+}
+.message-actions button:hover {
+  background: #4a4a52;
+}
+
+/* --- Edit Mode --- */
+/* This now styles the full-width edit area */
+.edit-area {
+  width: 100%;
+  background-color: #2a2b2e; /* Give it a background */
+  border: 1px solid #007bff; /* Add a highlight border */
+  border-radius: 8px;
+  padding: 10px;
+}
+.edit-area textarea {
+  width: 100%;
+  padding: 10px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  border: 1px solid #555; /* Darker border inside */
+  border-radius: 8px;
+  margin-bottom: 10px; /* Spacing */
+  min-height: 100px; /* Make it taller by default */
+  background: #3a3b3e;
+  color: #f1f1f1;
+  resize: vertical; /* Allow user to resize vertically */
+}
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.edit-actions button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+.edit-actions .save-btn {
+  background-color: #007bff;
+  color: white;
+}
+.edit-actions .cancel-btn {
+  background-color: #4a4a52;
+  color: #f1f1f1;
+}
+
+/* --- Chat Input --- */
+.chat-input-area {
+  padding: 0 10px 10px 10px;
+}
+.file-preview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  background-color: #3a3b3e;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+.file-preview span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 10px;
+}
+.file-preview button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #888;
+}
+
+.chat-input {
+  display: flex;
+  padding: 10px;
+  border: 1px solid #303030;
+  border-radius: 12px;
+  background-color: #2a2b2e;
+  align-items: flex-end; 
+}
+
+.upload-btn {
+  background: none;
+  border: none;
+  padding: 0 10px;
+  font-size: 1.2rem;
+  color: #888;
+  cursor: pointer;
+  padding-bottom: 12px; 
+}
+.upload-btn:hover {
+  color: #f1f1f1;
+}
+
+.chat-input textarea {
+  flex-grow: 1;
+  padding: 12px;
+  font-size: 1rem;
+  font-family: inherit; 
+  line-height: 1.5;     
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #f1f1f1;
+  resize: none;         
+  overflow-y: hidden;     
+}
+
+.chat-input button {
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 2px; 
+}
+.chat-input button:hover {
+  background-color: #0056b3;
+}
+.chat-input button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+/* Stop Button */
+.stop-btn {
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  background-color: #c72c41;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 2px; 
+}
+.stop-btn:hover {
+  background-color: #a52335;
+}
+
+/* --- Markdown & Code Styling --- */
+.markdown-content {
+  line-height: 1.6;
+}
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 5px;
+}
+.markdown-content ul,
+.markdown-content ol {
+  margin-left: 20px;
+  margin-bottom: 15px;
+}
+.markdown-content li {
+  margin-bottom: 5px;
+}
+.markdown-content p {
+  margin-bottom: 15px;
+}
+.markdown-content :not(pre) > code {
+  background-color: #2a2b2e;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  color: #cddc39;
+}
+.code-block-wrapper {
+  position: relative;
+  margin: 15px 0;
+  font-size: 0.9rem;
+}
+.code-block-wrapper pre {
+  border-radius: 8px;
+  padding: 15px !important;
+  overflow-x: auto;
+}
+.copy-code-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 8px;
+  cursor: pointer;
+  opacity: 0.7;
+  font-size: 0.8rem;
+}
+.code-block-wrapper:hover .copy-code-button {
+  opacity: 1;
+}
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+  border: 1px solid #444;
+}
+.markdown-content th,
+.markdown-content td {
+  border: 1px solid #444;
+  padding: 8px;
+  text-align: left;
+}
+.markdown-content th {
+  background-color: #2a2b2e;
+  font-weight: bold;
+}
+.markdown-content tr:nth-child(even) {
+  background-color: #2c2f33;
+}
+.markdown-content blockquote {
+  border-left: 4px solid #007bff;
+  padding-left: 15px;
+  color: #ccc;
+  margin-left: 0;
+  margin-bottom: 15px;
+  background-color: #2a2b2e;
+}
+
+/* --- File Preview Panel Styling --- */
+.file-preview-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+.file-preview-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  max-width: 800px;
+  background-color: #202123;
+  color: #f1f1f1;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.4);
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+}
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background-color: #343541;
+  border-bottom: 1px solid #444;
+}
+.preview-header strong {
+  font-size: 1.1rem;
+}
+.preview-header-buttons {
+  display: flex;
+  gap: 10px;
+}
+.preview-header .close-btn,
+.preview-header .external-open-btn {
+  background: #4a4a52;
+  border: 1px solid #555;
+  color: #f1f1f1;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+.preview-header .close-btn:hover,
+.preview-header .external-open-btn:hover {
+  background-color: #5a5a62;
+}
+.preview-content {
+  flex-grow: 1;
+  overflow: auto;
+  position: relative;
+}
+.preview-code-block-wrapper {
+  height: 100%;
+  overflow: auto;
+  background: #1e1e1e;
+}
+.preview-code-block {
+  margin: 0 !important;
+  min-height: 100%;
+  padding: 1rem !important;
+  font-size: 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.preview-image-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 1rem;
+}
+.preview-image-wrapper img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.preview-fallback {
+  padding: 20px;
+  text-align: center;
+}
+.preview-fallback button {
+  background-color: #4a4a52;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+/* --- PDF 'pdfjs-dist' Previewer Styles --- */
+.pdf-viewer-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+/* Modify the existing PDF controls to spread out */
+.pdf-controls {
+  display: flex;
+  justify-content: space-between; /* This spreads items out */
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #3a3b3e;
+  flex-shrink: 0;
+  border-bottom: 1px solid #444;
+}
+.pdf-controls button {
+  background-color: #4a4a52;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin: 0 10px;
+  cursor: pointer;
+}
+.pdf-controls button:hover:not(:disabled) {
+  background-color: #5a5a62;
+}
+.pdf-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Style for the new Rotate button */
+.pdf-rotate-btn {
+  background-color: #4a4a52;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 1.2rem; /* Makes the ↻ icon bigger */
+  line-height: 1;
+}
+.pdf-rotate-btn:hover {
+  background-color: #5a5a62;
+}
+
+/* New wrapper for the page indicator text */
+.pdf-page-indicator span {
+  font-size: 0.9rem;
+  color: #f1f1f1;
+}
+
+/* Style for the page jump input group */
+.pdf-page-jump {
+  display: flex;
+  align-items: center;
+}
+.pdf-page-jump input {
+  width: 50px;
+  padding: 5px;
+  border-radius: 3px;
+  border: 1px solid #555;
+  background-color: #2a2b2e;
+  color: #f1f1f1;
+  text-align: center;
+  margin-right: 5px;
+}
+.pdf-page-jump button {
+  background-color: #4a4a52;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin: 0; /* Overrides .pdf-controls button margin */
+}
+.pdf-page-jump button:hover {
+  background-color: #5a5a62;
+}
+
+.pdf-canvas-wrapper {
+  flex-grow: 1;
+  overflow: auto;
+  background-color: #525659;
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* Remove margin from the canvas wrapper's internal canvas */
+.pdf-page-canvas {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  margin-bottom: 10px; /* This adds the sliding separation */
+}
+
+/* --- NEW: CUSTOM SCROLLBAR STYLING --- */
+/* This targets WebKit-based browsers (Chrome, Edge, Safari, Electron) */
+
+/* The main track (the background) */
+::-webkit-scrollbar {
+  width: 10px;  /* Width of the vertical scrollbar */
+  height: 10px; /* Height of the horizontal scrollbar */
+}
+
+/* The track piece (the part the thumb slides on) */
+::-webkit-scrollbar-track {
+  background: #202123; /* Dark background for the track */
+}
+
+/* The draggable scrolling handle (the "thumb") */
+::-webkit-scrollbar-thumb {
+  background: #4a4a52; /* A slightly lighter grey */
+  border-radius: 5px;
+  border: 2px solid #202123; /* Creates a "padding" effect */
+}
+
+/* The thumb on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #5a5a62; /* Even lighter on hover */
+}

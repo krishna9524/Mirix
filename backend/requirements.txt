@@ -1,0 +1,33 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic
+pydantic-settings
+python-dotenv
+
+# AI & LLM Packages
+langchain
+langchain-google-genai
+langchain-openai
+# --- NEW: File Upload & Parsing ---
+python-multipart
+pypdf
+python-docx
+
+
+# --- NEW: Vector Memory System ---
+sentence-transformers
+faiss-cpu
+
+# --- NEW: For Multi-Agent & Vision ---
+langchain-core
+Pillow
+
+# --- NEW: OCR and PDF-to-Image ---
+pytesseract
+pdf2image
+python-magic
+python-magic-bin==0.4.14
+
+# --- NEW: MySQL Driver ---
+PyMySQL
