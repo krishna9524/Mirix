@@ -1,114 +1,381 @@
-<<<<<<< HEAD
+<div align="center">
+
+# 🕵️‍♂️ SceneSolver  
+### AI-Powered Crime Video Analysis Platform
+
+<img src="https://img.shields.io/badge/AI-Video%20Analysis-red?style=for-the-badge" />
+<img src="https://img.shields.io/badge/Backend-Flask-black?style=for-the-badge" />
+<img src="https://img.shields.io/badge/Frontend-React-blue?style=for-the-badge" />
+<img src="https://img.shields.io/badge/LLM-Ollama-green?style=for-the-badge" />
+<img src="https://img.shields.io/badge/Database-MongoDB-darkgreen?style=for-the-badge" />
+
+<br/>
+
+> 🚨 Analyze crime videos using AI, generate evidence summaries, and chat with a local LLM-powered investigation assistant.
+
+</div>
 
 ---
 
-```markdown
-# MIRIX 🧠🤖 
-**Multi-Agent AI Orchestration & Cognitive Memory System**
+# ✨ Features
 
-MIRIX is a local-first, highly concurrent AI backend built with FastAPI and LangGraph. It leverages local Large Language Models (like Qwen2.5-coder) to execute complex, multi-step reasoning tasks across a custom hybrid cognitive memory architecture. 
+✅ AI Crime Classification using CLIP  
+✅ Automatic Story Generation with BART  
+✅ Video Frame Extraction  
+✅ Local LLM Chat Support (Ollama)  
+✅ Evidence Labeling System  
+✅ Conversational Memory  
+✅ Flask REST APIs  
+✅ React Frontend Dashboard  
+✅ Redis Cache Support  
 
-## 🚀 Key Features
+---
 
-* **ReAct Multi-Agent Orchestration:** Utilizes LangGraph to create autonomous agents capable of routing queries, invoking tools (e.g., DuckDuckGo for live web search), and querying internal vector databases.
-* **Real-Time Streaming:** Implements Server-Sent Events (SSE) to stream AI thought processes, tool executions, and token generation back to the client in real-time.
-* **Hybrid Cognitive Memory System:**
-    * **Episodic Memory:** RAG-enabled chat history storing session context in both relational databases and vector indices.
-    * **Resource Memory:** Persistent tracking of uploaded files, linking UUIDs and disk paths to extracted vector chunks.
-    * *(Planned)* Semantic, Procedural, and Core memory modules for personas and factual grounding.
-* **Multimodal Document Intelligence:** Robust ingestion pipeline for PDFs, DOCX, TXT, and Images. Includes OCR capabilities using Tesseract to extract text from scanned documents and images.
-* **Dual Vector Embeddings:** Uses `SentenceTransformers` to generate embeddings. Employs `all-MiniLM-L6-v2` for standard text and `clip-ViT-B-32` for cross-modal image-to-text retrieval.
+# 🧠 AI Models Used
 
-## 🛠️ Tech Stack
+| Model | Purpose |
+|------|------|
+| CLIP | Crime Scene Classification |
+| BART | Story/Summary Generation |
+| Ollama | Local LLM Conversations |
 
-* **Framework:** FastAPI, Uvicorn
-* **Orchestration & LLMs:** LangChain, LangGraph, Ollama (Qwen2.5-coder:14b)
-* **Database (Relational):** MySQL, SQLAlchemy, PyMySQL
-* **Database (Vector):** FAISS (`faiss-cpu`)
-* **Embeddings & Vision:** SentenceTransformers, CLIP, Pillow
-* **Document Parsing & OCR:** `pytesseract`, `pdf2image`, `pypdf`, `python-docx`, `python-multipart`
+---
 
-## 📂 Architecture Overview
+# 🛠️ Tech Stack
 
-```text
-app/
-├── api/          # FastAPI routers (chat, memory, files, agents)
-├── agents/       # LangGraph Orchestrator and specialized sub-agents
-├── core/         # Database engine and config settings
-├── memory_system/# Cognitive memory modules (Episodic, Resource, Semantic)
-├── models/       # SQLAlchemy DB models & Pydantic schemas
-└── services/     # RAG, Embeddings, FAISS, and future Multimodal logic
+<div align="center">
 
-```
+| Frontend | Backend | AI/ML | Database |
+|---|---|---|---|
+| React.js | Flask | CLIP | MongoDB |
+| Tailwind CSS | Python | BART | Redis |
+| Axios | REST APIs | Ollama | ChromaDB |
 
-## ⚙️ Setup & Installation
+</div>
 
-### 1. Prerequisites
+---
 
-* Python 3.10+
-* MySQL Server running locally or remotely.
-* [Ollama](https://ollama.ai/) installed and running locally.
-* Tesseract OCR installed on your system (required for image/PDF parsing).
-
-### 2. Install Dependencies
-
-Clone the repository and install the required Python packages:
+# 📂 Project Structure
 
 ```bash
+SceneSolver/
+│
+├── backend/
+│   ├── app.py
+│   ├── routes/
+│   ├── services/
+│   ├── models/
+│   ├── uploads/
+│   ├── utils/
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── components/
+│   └── package.json
+│
+├── README.md
+├── .env
+└── .gitignore
+```
+
+---
+
+# ⚙️ Setup & Installation
+
+## 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/your-username/scenesolver.git
+
+cd scenesolver
+```
+
+---
+
+## 2️⃣ Backend Setup
+
+```bash
+cd backend
+
 pip install -r requirements.txt
-
 ```
 
-### 3. Pull the Local LLM
+---
 
-Ensure Ollama is running, then pull the default model:
+## 3️⃣ Frontend Setup
 
 ```bash
-ollama run qwen2.5-coder:14b
+cd ../frontend
 
+npm install
 ```
 
-### 4. Environment Variables
+---
 
-Create a `.env` file in the root directory and configure your database and API keys:
+# 🧠 Pull the Local LLM
+
+SceneSolver uses **Ollama** for running local AI models.
+
+---
+
+## 📥 Install Ollama
+
+```bash
+https://ollama.com/download
+```
+
+---
+
+## 🚀 Pull Llama 3
+
+```bash
+ollama pull llama3
+```
+
+---
+
+## 🔥 Alternative Models
+
+```bash
+ollama pull mistral
+
+ollama pull gemma
+```
+
+---
+
+## ✅ Verify Ollama
+
+```bash
+ollama run llama3
+```
+
+---
+
+# 🔐 Environment Variables
+
+Create a `.env` file inside the `backend/` folder.
 
 ```env
-OPENROUTER_API_KEY="your_openrouter_key_here"
+# MongoDB
+MONGO_URI=your_mongodb_connection
 
-# MySQL Config
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_USER=root
-DB_PASS=your_password
-DB_NAME=mirix_db
+# Flask
+SECRET_KEY=your_secret_key
 
+# Ollama
+OLLAMA_MODEL=llama3
+OLLAMA_BASE_URL=http://localhost:11434
+
+# Redis
+REDIS_URL=your_redis_url
+
+# Uploads
+UPLOAD_FOLDER=uploads
 ```
 
-### 5. Run the Application
+---
 
-Start the FastAPI server using Uvicorn:
+# ▶️ Run the Application
+
+## 🚀 Start Backend
 
 ```bash
-uvicorn main:app --host 0.0.0.1 --port 8000 --reload
+cd backend
 
+python app.py
 ```
 
-## 🔌 API Endpoints
+### Backend URL
 
-* `POST /api/v1/chat-stream`: Send message history and receive an SSE stream of the agent's response and tool usage.
-* `POST /api/v1/generate-title`: Generate a 3-5 word summary title for a chat session.
-* `POST /api/v1/upload`: Upload files (PDF, DOCX, TXT, Images). Automatically extracts text via OCR and adds it to the FAISS vector database.
-* `GET /api/v1/get/{file_id}/{filename}`: Retrieve an uploaded file directly from local storage.
-* `GET /api/v1/agents`: List all available specialized agents.
-
-## 🧠 Memory Components
-
-* **SQL Database:** Stores relational metadata (`memory_chunks`, `resource_memory`, `episodic_memory`).
-* **FAISS Indices:** Saves flat L2 indices locally as `mirix_text_index.faiss` and `mirix_image_index.faiss` for persistent vector retrieval across restarts.
-
+```bash
+http://localhost:5000
 ```
 
+---
+
+## 💻 Start Frontend
+
+```bash
+cd frontend
+
+npm start
 ```
-=======
-# Mirix
->>>>>>> 10c093b1de1a0a208ac553b0149f3e37c3b88386
+
+### Frontend URL
+
+```bash
+http://localhost:3000
+```
+
+---
+
+# 🔌 API Reference
+
+# 📤 Upload Video
+
+### Endpoint
+
+```http
+POST /api/upload
+```
+
+### Request
+
+```bash
+FormData:
+video=<video_file>
+```
+
+### Response
+
+```json
+{
+  "message": "Video uploaded successfully",
+  "video_id": "12345"
+}
+```
+
+---
+
+# 🧠 Analyze Video
+
+### Endpoint
+
+```http
+POST /api/analyze/<video_id>
+```
+
+### Response
+
+```json
+{
+  "crime_type": "Robbery",
+  "summary": "Masked suspect entered through back door..."
+}
+```
+
+---
+
+# 💬 Chat with AI
+
+### Endpoint
+
+```http
+POST /api/chat
+```
+
+### Request
+
+```json
+{
+  "message": "Explain the crime scene"
+}
+```
+
+### Response
+
+```json
+{
+  "response": "The suspect entered the building at 2:14 AM..."
+}
+```
+
+---
+
+# 🧠 Memory Storage Note
+
+SceneSolver supports contextual AI conversations using memory-aware architecture.
+
+---
+
+## 🗂️ Current Memory System
+
+- Temporary conversation storage
+- Prompt history tracking
+- Cached video analysis results
+- Redis-based fast retrieval
+
+---
+
+## 🏗️ Recommended Production Architecture
+
+| Component | Purpose |
+|---|---|
+| Redis | Short-term AI memory |
+| MongoDB | Persistent chat storage |
+| ChromaDB | Vector embeddings |
+| FAISS | Semantic similarity search |
+
+---
+
+# 📸 Screenshots
+
+<div align="center">
+
+| Dashboard | AI Analysis | Chat Assistant |
+|---|---|---|
+| Add screenshots here | Add screenshots here | Add screenshots here |
+
+</div>
+
+---
+
+# 📈 Future Improvements
+
+- 🎥 Real-time CCTV Monitoring  
+- 👤 Face Recognition  
+- 🎙️ Voice Transcription  
+- 🧠 RAG-based Investigation Assistant  
+- 📍 Timeline Reconstruction  
+- 🚓 Multi-Camera Tracking  
+- ☁️ Cloud Deployment Support  
+
+---
+
+# 🤝 Contributing
+
+```bash
+# Fork Repository
+
+# Create Feature Branch
+git checkout -b feature-name
+
+# Commit Changes
+git commit -m "Added new feature"
+
+# Push Branch
+git push origin feature-name
+```
+
+Then create a Pull Request 🚀
+
+---
+
+# 📜 License
+
+Licensed under the **MIT License**
+
+---
+
+# ⭐ Support
+
+If you like this project:
+
+🌟 Star the repository  
+🍴 Fork the project  
+🛠️ Contribute improvements  
+📢 Share with others  
+
+---
+
+<div align="center">
+
+# 🚨 SceneSolver
+### Smart AI For Smarter Investigations
+
+Made with ❤️ using Flask, React & AI
+
+</div>
